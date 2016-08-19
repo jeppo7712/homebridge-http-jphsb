@@ -105,7 +105,7 @@ Http_jphsb.prototype.setPowerState = function(powerOn, callback) {
 			this.log("power change complete.");
 			callback(null); // success
 		} else {
-			this.log("Error '%s' setting power state. Response: %s", err, body);
+			this.log("Error setting power state. Response: %s %s", err, body);
 			callback(err || new Error("Error setting power."));
 		}
 	}.bind(this));
@@ -138,7 +138,7 @@ Http_jphsb.prototype.setHue = function(level, callback) {
 			this.log("hue change to %s complete.", level);
 			callback(null); // success
 		} else {
-			this.log("Error setting hue. Response: %s %s %s", err, body, response.statusCode);
+			this.log("Error setting hue. Response: %s %s", err, body);
 			callback(err || new Error("Error setting hue."));
 		}
 	}.bind(this));
@@ -188,7 +188,7 @@ Http_jphsb.prototype.getSaturation = function(callback) {
 			this.log('Saturation is currently %s', level);
 			callback(null, level); // success
 		} else {
-			this.log("Error getting Saturation on %s: %s %s", this.getsaturation_url, err, response.statusCode);
+			this.log("Error getting Saturation on %s: %s", this.getsaturation_url, err);
 			callback(err);
 		}
 	}.bind(this));
