@@ -1,2 +1,2 @@
-# homebridge-jphsi
-homebridge npm package for HSI control
+# homebridge-http-jphsb
+homebridge npm package for http HSB control
