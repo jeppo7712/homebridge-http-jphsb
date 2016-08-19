@@ -81,7 +81,7 @@ Http_jphsb.prototype.getPowerState = function(callback) {
 			this.log('power is currently %s', powerOn ? 'ON' : 'OFF');
 			callback(null, powerOn); // success
 		} else {
-			this.log("Error getting power state: %s %s %s", this.status_url, err, response.statusCode);
+			this.log("Error getting power state: %s %s", this.status_url, err);
 			callback(err);
 		}
 	}.bind(this));
@@ -105,7 +105,7 @@ Http_jphsb.prototype.setPowerState = function(powerOn, callback) {
 			this.log("power change complete.");
 			callback(null); // success
 		} else {
-			this.log("Error setting power state. Response: %s %s", err, body);
+			this.log("Error setting power state. Response: %s %s", url, err);
 			callback(err || new Error("Error setting power."));
 		}
 	}.bind(this));
@@ -122,7 +122,7 @@ Http_jphsb.prototype.getHue = function(callback) {
 			this.log('hue is currently %s', level);
 			callback(null, level); // success
 		} else {
-			this.log("Error getting hue %s : %s %s", this.gethue_url, err, response.statusCode);
+			this.log("Error getting hue : %s %s", this.gethue_url, err);
 			callback(err);
 		}
 	}.bind(this));
@@ -138,7 +138,7 @@ Http_jphsb.prototype.setHue = function(level, callback) {
 			this.log("hue change to %s complete.", level);
 			callback(null); // success
 		} else {
-			this.log("Error setting hue. Response: %s %s", err, body);
+			this.log("Error setting hue. Response: %s %s", url, err);
 			callback(err || new Error("Error setting hue."));
 		}
 	}.bind(this));
@@ -155,7 +155,7 @@ Http_jphsb.prototype.getBrightness = function(callback) {
 			this.log('brightness is currently %s', level);
 			callback(null, level); // success
 		} else {
-			this.log("Error getting brightness: %s %s", err, response.statusCode);
+			this.log("Error getting brightness: %s %s", this.getbrightness_url, err);
 			callback(err);
 		}
 	}.bind(this));
@@ -171,7 +171,7 @@ Http_jphsb.prototype.setBrightness = function(level, callback) {
 			this.log("brightness change to %s complete.", level);
 			callback(null); // success
 		} else {
-			this.log("Error setting brightness. Response: %s %s %s", err, body, response.statusCode);
+			this.log("Error setting brightness. Response: %s %s", url, err);
 			callback(err || new Error("Error setting brightness."));
 		}
 	}.bind(this));
@@ -188,7 +188,7 @@ Http_jphsb.prototype.getSaturation = function(callback) {
 			this.log('Saturation is currently %s', level);
 			callback(null, level); // success
 		} else {
-			this.log("Error getting Saturation on %s: %s", this.getsaturation_url, err);
+			this.log("Error getting Saturation : %s %s", this.getsaturation_url, err);
 			callback(err);
 		}
 	}.bind(this));
@@ -204,7 +204,7 @@ Http_jphsb.prototype.setSaturation = function(level, callback) {
 			this.log("Saturation change to %s complete.", level);
 			callback(null); // success
 		} else {
-			this.log("Error setting Saturation. Response: %s %s %s", err, body, response.statusCode);
+			this.log("Error setting Saturation. Response: %s %s", url, err);
 			callback(err || new Error("Error setting Saturation."));
 		}
 	}.bind(this));
