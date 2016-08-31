@@ -1,34 +1,34 @@
 {
-  "name": "homebridge-http-jphsb",
-  "version": "1.0.0",
-  "description": "http hsb control for homebridge",
-  "main": "index.js",
-  "dependencies": {
-    "request": "^2.74.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
-  },
-  "keywords": [
-    "homebridge-plugin",
-    "hsb",
-    "rgb",
-    "rgbw",
-    "led"
-  ],
-  "engines": {
-      "node": ">=0.12.0",
-	      "homebridge": ">=0.2.0"
-		    },
-  "author": "jeppo77",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
-  },
-  "homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme"
+	"name": "homebridge-http-jphsb",
+	"version": "1.0.0",
+	"description": "http hsb control for homebridge",
+	"keywords": [
+		"homebridge-plugin",
+		"hsb",
+		"rgb",
+		"rgbw",
+		"led"
+	],
+	"homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme",
+	"bugs": {
+		"url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
+	},
+	"license": "MIT",
+	"author": "jeppo77",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"request": "^2.74.0"
+	},
+	"devDependencies": {},
+	"engines": {
+		"node": ">=0.12.0",
+		"homebridge": ">=0.2.0"
+	}
 }
