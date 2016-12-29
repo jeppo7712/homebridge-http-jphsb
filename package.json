@@ -1,34 +1,64 @@
 {
-	"name": "homebridge-http-jphsb",
-	"version": "1.0.0",
-	"description": "http hsb control for homebridge",
-	"keywords": [
-		"homebridge-plugin",
-		"hsb",
-		"rgb",
-		"rgbw",
-		"led"
-	],
-	"homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme",
-	"bugs": {
-		"url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
-	},
-	"license": "MIT",
-	"author": "jeppo77",
-	"main": "index.js",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
-	},
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"dependencies": {
-		"request": "^2.74.0"
-	},
-	"devDependencies": {},
-	"engines": {
-		"node": ">=0.12.0",
-		"homebridge": ">=0.2.0"
-	}
+  "name": "homebridge-http-jphsb",
+  "version": "1.0.3",
+  "description": "http hsb control for homebridge",
+  "main": "index.js",
+  "dependencies": {
+    "request": "^2.74.0",
+    "requestretry": "^1.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "hsb",
+    "rgb",
+    "rgbw",
+    "led"
+  ],
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "author": {
+    "name": "jeppo77"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
+  },
+  "homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme",
+  "gitHead": "f242b2d1483dfc7e55369c161314d15b3008b447",
+  "_id": "homebridge-http-jphsb@1.0.2",
+  "_shasum": "315c1fa38593f18962c6aaa1d56cd7337259e1e8",
+  "_from": "homebridge-http-jphsb@*",
+  "_npmVersion": "2.10.1",
+  "_nodeVersion": "0.12.4",
+  "_npmUser": {
+    "name": "jeppo77",
+    "email": "jeppo77@yahoo.com"
+  },
+  "dist": {
+    "shasum": "315c1fa38593f18962c6aaa1d56cd7337259e1e8",
+    "tarball": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.0.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "jeppo77",
+      "email": "jeppo77@yahoo.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/homebridge-http-jphsb-1.0.2.tgz_1472680806147_0.7515264367684722"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.0.2.tgz",
+  "readme": "ERROR: No README data found!"
 }
