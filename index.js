@@ -1,8 +1,9 @@
-var request = require("requestretry");
+var request = require("request");
 var Service, Characteristic;
 var ReqPool = [{
     maxSockets: 5
 }];
+
 
 module.exports = function(homebridge) {
     Service = homebridge.hap.Service;
@@ -27,17 +28,12 @@ function Http_jphsb(log, config) {
     this.off_url = config["off_url"];
     this.brightness = config["brightness"] || "no";
     this.setbrightness_url = config["setbrightness_url"];
-    this.getbrightness_url = config["getbrightness_url"];
     this.hue = config["hue"] || "no";
     this.sethue_url = config["sethue_url"];
-    this.gethue_url = config["gethue_url"];
     this.saturation = config["saturation"] || "no";
     this.setsaturation_url = config["setsaturation_url"];
-    this.getsaturation_url = config["getsaturation_url"];
     // curtains sectopn
     this.move_url = config["move_url"];
-    this.target_url = config["target_url"];
-    this.state_url = config["state_url"];
 
     switch (this.service) {
         case "Switch":
@@ -59,47 +55,23 @@ function Http_jphsb(log, config) {
                 this.log('... adding Brightness');
                 this.JPService
                     .addCharacteristic(Characteristic.Brightness)
-                    .on('get', this.getBrightness.bind(this))
                     .on('set', this.setBrightness.bind(this));
             }
             if (this.hue == "yes") {
                 this.log('... adding hue');
                 this.JPService
                     .addCharacteristic(Characteristic.Hue)
-                    .on('get', this.getHue.bind(this))
                     .on('set', this.setHue.bind(this));
             }
             if (this.saturation == "yes") {
                 this.log('... adding saturation');
                 this.JPService
                     .addCharacteristic(Characteristic.Saturation)
-                    .on('get', this.getSaturation.bind(this))
                     .on('set', this.setSaturation.bind(this));
             }
             break;
         case "Blinds":
             this.log('creating Blinds');
-            this.interval = null;
-            this.timeout = null;
-            this.lastPosition = 0; // last known position of the blinds, down by default
-            this.currentPositionState = 2; // stopped by default
-            this.currentTargetPosition = 0; // down by default
-
-            this.log("Getting current blinds position...");
-            request.get({
-                url: this.status_url,
-                pool: ReqPool[this.poolnumber],
-                maxAttempts: this.maxAttempts,
-                retryDelay: this.retryDelay,
-                timeout: this.timeout
-            }, function(err, response, body) {
-                if (!err && response.statusCode == 200) {
-                    this.lastPosition = parseInt(body);
-                    this.log('position is currently %d', this.lastPosition);
-                } else {
-                    this.log("Error getting position: %s %s", this.status_url, err);
-                }
-            }.bind(this));
 
             // register the service and provide the functions
             this.JPService = new Service.WindowCovering(this.name);
@@ -115,14 +87,13 @@ function Http_jphsb(log, config) {
             // https://github.com/KhaosT/HAP-NodeJS/blob/master/lib/gen/HomeKitTypes.js#L1138
             this.JPService
                 .getCharacteristic(Characteristic.PositionState)
-                .on('get', this.getPositionState.bind(this));
 
             // the target position (0-100%)
             // https://github.com/KhaosT/HAP-NodeJS/blob/master/lib/gen/HomeKitTypes.js#L1564
             this.JPService
                 .getCharacteristic(Characteristic.TargetPosition)
-                .on('get', this.getTargetPosition.bind(this))
                 .on('set', this.setTargetPosition.bind(this));
+
             break;
     }
 
@@ -147,9 +118,26 @@ Http_jphsb.prototype.getPowerState = function(callback) {
         timeout: this.timeout
     }, function(err, response, body) {
         if (!err && response.statusCode == 200) {
-            var powerOn = parseInt(body) > 0;
-            this.log('power is currently %s', powerOn ? 'ON' : 'OFF');
-            callback(null, powerOn); // success
+
+            var info = JSON.parse(body);
+            if (this.brightness == "yes") {
+                this.JPService
+                    .getCharacteristic(Characteristic.Brightness).updateValue(parseInt(info.bri));
+                this.log('brightness is currently %s', parseInt(info.bri));
+            }
+            if (this.hue == "yes") {
+                this.JPService
+                    .getCharacteristic(Characteristic.Hue).updateValue(parseInt(info.hue));
+                this.log('hue is currently %s', parseInt(info.hue));
+            }
+            if (this.saturation == "yes") {
+                this.JPService
+                    .getCharacteristic(Characteristic.Saturation).updateValue(parseInt(info.sat));
+                this.log('saturation is currently %s', parseInt(info.sat));
+            }
+            this.log('power is currently %s', info.pow ? 'ON' : 'OFF');
+            callback(null, parseInt(info.pow)); // success
+
         } else {
             this.log("Error getting power state: %s %s", this.status_url, err);
             callback(err);
@@ -318,9 +306,17 @@ Http_jphsb.prototype.getCurrentPosition = function(callback) {
         timeout: this.timeout
     }, function(err, response, body) {
         if (!err && response.statusCode == 200) {
-            this.lastPosition = parseInt(body);
-            this.log('position is currently %d', this.lastPosition);
-            callback(null, this.lastPosition); // success
+            var info = JSON.parse(body);
+
+            this.JPService
+                .getCharacteristic(Characteristic.PositionState).updateValue(parseInt(info.state));
+            this.log('state is currently %d', parseInt(info.state));
+            this.JPService
+                .getCharacteristic(Characteristic.TargetPosition).updateValue(parseInt(info.target));
+            this.log('target is currently %d', parseInt(info.target));
+
+            this.log('position is currently %d', parseInt(info.pow));
+            callback(null, parseInt(info.pow)); // success
         } else {
             this.log("Error getting position: %s %s", this.status_url, err);
             callback(err);
