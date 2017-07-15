@@ -1,20 +1,73 @@
 {
-  "name": "homebridge-http-jphsb",
-  "version": "1.2.0",
-  "description": "http hsb control for homebridge",
-  "main": "index.js",
+  "_args": [
+    [
+      {
+        "raw": "homebridge-http-jphsb",
+        "scope": null,
+        "escapedName": "homebridge-http-jphsb",
+        "name": "homebridge-http-jphsb",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/usr/local/lib/node_modules"
+    ]
+  ],
+  "_from": "homebridge-http-jphsb@latest",
+  "_id": "homebridge-http-jphsb@1.2.0",
+  "_inCache": true,
+  "_location": "/homebridge-http-jphsb",
+  "_nodeVersion": "0.12.4",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/homebridge-http-jphsb-1.0.2.tgz_1472680806147_0.7515264367684722"
+  },
+  "_npmUser": {
+    "name": "jeppo77",
+    "email": "jeppo77@yahoo.com"
+  },
+  "_npmVersion": "2.10.1",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "homebridge-http-jphsb",
+    "scope": null,
+    "escapedName": "homebridge-http-jphsb",
+    "name": "homebridge-http-jphsb",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.0.2.tgz",
+  "_shasum": "1bb75dcd64c2977125d7b8b48c2d116d7e1999a2",
+  "_shrinkwrap": null,
+  "_spec": "homebridge-http-jphsb",
+  "_where": "/usr/local/lib/node_modules",
+  "author": {
+    "name": "jeppo77"
+  },
+  "bugs": {
+    "url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
+  },
   "dependencies": {
     "request": "^2.74.0",
     "requestretry": "^1.12.0"
   },
+  "description": "http hsb control for homebridge",
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "directories": {},
+  "dist": {
+    "shasum": "1bb75dcd64c2977125d7b8b48c2d116d7e1999a2",
+    "tarball": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.2.0.tgz"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
   },
+  "gitHead": "f242b2d1483dfc7e55369c161314d15b3008b447",
+  "homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme",
   "keywords": [
     "homebridge-plugin",
     "hsb",
@@ -22,43 +75,23 @@
     "rgbw",
     "led"
   ],
-  "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
-  },
-  "author": {
-    "name": "jeppo77"
-  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jeppo77/homebridge-http-jphsb/issues"
-  },
-  "homepage": "https://github.com/jeppo77/homebridge-http-jphsb#readme",
-  "gitHead": "f242b2d1483dfc7e55369c161314d15b3008b447",
-  "_id": "homebridge-http-jphsb@1.0.2",
-  "_shasum": "315c1fa38593f18962c6aaa1d56cd7337259e1e8",
-  "_from": "homebridge-http-jphsb@*",
-  "_npmVersion": "2.10.1",
-  "_nodeVersion": "0.12.4",
-  "_npmUser": {
-    "name": "jeppo77",
-    "email": "jeppo77@yahoo.com"
-  },
-  "dist": {
-    "shasum": "315c1fa38593f18962c6aaa1d56cd7337259e1e8",
-    "tarball": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.0.2.tgz"
-  },
+  "main": "index.js",
   "maintainers": [
     {
       "name": "jeppo77",
       "email": "jeppo77@yahoo.com"
     }
   ],
-  "_npmOperationalInternal": {
-    "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/homebridge-http-jphsb-1.0.2.tgz_1472680806147_0.7515264367684722"
+  "name": "homebridge-http-jphsb",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeppo77/homebridge-http-jphsb.git"
   },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/homebridge-http-jphsb/-/homebridge-http-jphsb-1.0.2.tgz",
-  "readme": "ERROR: No README data found!"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.3.0"
 }
