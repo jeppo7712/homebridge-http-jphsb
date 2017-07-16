@@ -173,27 +173,6 @@ Http_jphsb.prototype.setPowerState = function(powerOn, callback) {
     }.bind(this));
 }
 
-Http_jphsb.prototype.getHue = function(callback) {
-    this.log("Getting hue...");
-
-    request.get({
-        url: this.gethue_url,
-        pool: ReqPool[this.poolnumber],
-        maxAttempts: this.maxAttempts,
-        retryDelay: this.retryDelay,
-        timeout: this.timeout
-    }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-            var level = parseInt(body);
-            this.log('hue is currently %s', level);
-            callback(null, level); // success
-        } else {
-            this.log("Error getting hue : %s %s", this.gethue_url, err);
-            callback(err);
-        }
-    }.bind(this));
-}
-
 Http_jphsb.prototype.setHue = function(level, callback) {
     var url = this.sethue_url.replace('%h', level);
 
@@ -214,27 +193,6 @@ Http_jphsb.prototype.setHue = function(level, callback) {
     }.bind(this));
 }
 
-Http_jphsb.prototype.getBrightness = function(callback) {
-    this.log("Getting brightness...");
-
-    request.get({
-        url: this.getbrightness_url,
-        pool: ReqPool[this.poolnumber],
-        maxAttempts: this.maxAttempts,
-        retryDelay: this.retryDelay,
-        timeout: this.timeout
-    }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-            var level = parseInt(body);
-            this.log('brightness is currently %s', level);
-            callback(null, level); // success
-        } else {
-            this.log("Error getting brightness: %s %s", this.getbrightness_url, err);
-            callback(err);
-        }
-    }.bind(this));
-}
-
 Http_jphsb.prototype.setBrightness = function(level, callback) {
     var url = this.setbrightness_url.replace('%b', level);
 
@@ -251,27 +209,6 @@ Http_jphsb.prototype.setBrightness = function(level, callback) {
         } else {
             this.log("Error setting brightness. Response: %s %s", url, err);
             callback(err || new Error("Error setting brightness."));
-        }
-    }.bind(this));
-}
-
-Http_jphsb.prototype.getSaturation = function(callback) {
-    this.log("Getting Saturation...");
-
-    request.get({
-        url: this.getsaturation_url,
-        pool: ReqPool[this.poolnumber],
-        maxAttempts: this.maxAttempts,
-        retryDelay: this.retryDelay,
-        timeout: this.timeout
-    }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-            var level = parseInt(body);
-            this.log('Saturation is currently %s', level);
-            callback(null, level); // success
-        } else {
-            this.log("Error getting Saturation : %s %s", this.getsaturation_url, err);
-            callback(err);
         }
     }.bind(this));
 }
@@ -319,46 +256,6 @@ Http_jphsb.prototype.getCurrentPosition = function(callback) {
             callback(null, parseInt(info.pow)); // success
         } else {
             this.log("Error getting position: %s %s", this.status_url, err);
-            callback(err);
-        }
-    }.bind(this));
-}
-
-Http_jphsb.prototype.getPositionState = function(callback) {
-    this.log("Getting current state...");
-    request.get({
-        url: this.state_url,
-        pool: ReqPool[this.poolnumber],
-        maxAttempts: this.maxAttempts,
-        retryDelay: this.retryDelay,
-        timeout: this.timeout
-    }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-            this.currentPositionState = parseInt(body);
-            this.log('state is currently %d', this.currentPositionState);
-            callback(null, this.currentPositionState); // success
-        } else {
-            this.log("Error getting state: %s %s", this.state_url, err);
-            callback(err);
-        }
-    }.bind(this));
-}
-
-Http_jphsb.prototype.getTargetPosition = function(callback) {
-    this.log("Getting target position...");
-    request.get({
-        url: this.target_url,
-        pool: ReqPool[this.poolnumber],
-        maxAttempts: this.maxAttempts,
-        retryDelay: this.retryDelay,
-        timeout: this.timeout
-    }, function(err, response, body) {
-        if (!err && response.statusCode == 200) {
-            this.currentTargetPosition = parseInt(body);
-            this.log('target is currently %d', this.currentTargetPosition);
-            callback(null, this.currentTargetPosition); // success
-        } else {
-            this.log("Error getting state: %s %s", this.target_url, err);
             callback(err);
         }
     }.bind(this));
