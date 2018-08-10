@@ -4,7 +4,7 @@ var http = require("http");
 var url = require("url");
 var Service, Characteristic;
 var ReqPool = [{
-  maxSockets: 50
+  maxSockets: 5
 }];
 
 
