@@ -34,7 +34,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
-		"request": "^2.74.0"
+		"request": "^2.74.0",
+		"requestretry": "^7.0.0"
 	},
 	"devDependencies": {},
 	"optionalDependencies": {},
