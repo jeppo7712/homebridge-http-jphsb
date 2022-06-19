@@ -228,7 +228,7 @@ function Http_jphsb(log, config) {
       var cacheunderrequest = 0;
       var err, resp, body;
       this.cacheserver = http.createServer(function(serverrequest, serverresponse) {
-
+        //that.log("request %s", serverrequest.url);
         if (cacheenable) {
           if (!cacheunderrequest && !cachevalid) {
             cacheunderrequest = 1;
@@ -249,175 +249,21 @@ function Http_jphsb(log, config) {
               //that.log('cache : requetsing %s is done', that.status_url);
             }.bind(this));
           }
-
-
+          
+          if (cachevalid) {
+            sendCacheResponse(serverrequest, serverresponse);
+          }
+          else {
           //that.log('using cache for result of %s', serverrequest.url.substring(1));
           setInterval(function waitforcache() {
             if (cachevalid) {
               clearInterval(this);
+              sendCacheResponse(serverrequest, serverresponse);
               //that.log('cache : timer finished');
-              if (!err && resp.statusCode == 200) {
-                //that.log('cache : responding ok ');
-                serverresponse.writeHead(resp.statusCode, {
-                  'Content-Type': 'text/plain'
-                });
-                try {
-                  var q = url.parse(serverrequest.url.substring(1));
-                  var qdata = q.query;
-                  var info = JSON.parse(body);
-                  var i = 0;
-                  var slicepos = 0;
-                  var slice;
-                  //that.log('cache : parsing %s', q.pathname);
-                  if (q.pathname == '/led') {
-                    //that.log('cache : getting led');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
-                    if (slice == 'phsb') {
-                      //that.log('cache : phsb');
-                      var maxbrightness = 0;
-                      var avghue = 0;
-                      var avgsat = 0;
-                      while ((slicepos = qdata.indexOf('=', slicepos) + 1) > 0) {
-                        endpos = qdata.indexOf('&', slicepos);
-                        if (endpos == -1) {
-                          slice = parseInt(qdata.slice(slicepos));
-                        } else {
-                          slice = parseInt(qdata.slice(slicepos, endpos));
-                        }
-                        //that.log('cache : slice %d', slice);
-                        maxbrightness = (parseInt(info.led[slice].bri) > maxbrightness ? parseInt(info.led[slice].bri) : maxbrightness);
-                        avghue += parseInt(info.led[slice].hue);
-                        avgsat += parseInt(info.led[slice].sat);
-                        i++;
-                      }
-                      var result = "{\"pow\":\"" + maxbrightness + "\", \"bri\":\"" + maxbrightness + "\",\"hue\":\"" + parseInt(avghue / i) + "\",\"sat\":\"" + parseInt(avgsat / i) + "\"}";
-                      //that.log("cache : %s", result)
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: led not supported");
-                    }
-                  } else if (q.pathname == '/rctx') {
-                    //that.log('cache : getting rctx');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
-                    if (slice == 'get') {
-                      //that.log('cache : get');
-                      slice = parseInt(qdata.slice(qdata.indexOf('=', slicepos) + 1));
-                      //that.log('cache : slice %d', slice);
-                      var result = "{\"pow\":\"" + parseInt(info.rctx[slice].pow) + "\"}";
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else if (slice == 'pts') {
-                      //that.log('cache : pts');
-                      slice = qdata.slice(qdata.indexOf('=', slicepos) + 1);
-                      //that.log('cache : slice %d', slice);
-                      var result = JSON.stringify(info.rctx[slice]);
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: tctx not supported");
-                    }
-                  } else if (q.pathname == '/spot') {
-                    //that.log('cache : getting spot');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
-                    if (slice == 'pb') {
-                      //that.log('cache : pb');
-                      var maxbrightness = 0;
-                      while ((slicepos = qdata.indexOf('=', slicepos) + 1) > 0) {
-                        endpos = qdata.indexOf('&', slicepos);
-                        if (endpos == -1) {
-                          slice = parseInt(qdata.slice(slicepos));
-                        } else {
-                          slice = parseInt(qdata.slice(slicepos, endpos));
-                        }
-                        //that.log('cache : slice %d', slice);
-                        maxbrightness = (parseInt(info.spot[slice].bri) > maxbrightness ? parseInt(info.spot[slice].bri) : maxbrightness);
-                      }
-                      var result = "{\"pow\":\"" + maxbrightness + "\",\"bri\":\"" + maxbrightness + "\"}";
-                      //that.log("cache : %s", result);
-                      serverresponse.end(result);
-                    } else if (slice == 'getio') {
-                      //that.log('cache : getting io15');
-                      var result = "{\"pow\":\"" + parseInt(info.io15) + "\"}";
-                      //that.log("cacge :%s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: spot not supported");
-                    }
-                  } else if (q.pathname == '/runprogram') {
-                    //that.log('cache : getting runprogm');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
-                    if (slice == 'getstatus') {
-                      //that.log('cache : getstatus');
-                      slice = qdata.slice(qdata.indexOf('=', slicepos) + 1);
-                      //that.log('cache : slice %s', slice);
-                      if (parseInt(info.programrun) && (info.programname == slice)) {
-                        var result = "{\"pow\":\"1\"}";
-                      } else {
-                        var result = "{\"pow\":\"0\"}";
-                      }
-                      //that.log("cacge :%s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: runprogram not supported");
-                    }
-                  } else if (q.pathname == '/heater') {
-                    //that.log('cache : getting heater');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
-                    if (slice == 'status') {
-                      //that.log('cache : status');
-                      slice = parseInt(qdata.slice(qdata.indexOf('=', slicepos) + 1));
-                      //that.log('cache : slice %d', slice);
-                      var result = JSON.stringify(info.heater[slice]);
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: heater not supported");
-                    }
-                  } else if (q.pathname == '/water') {
-                    //that.log('cache : getting water');
-                    slice = qdata.slice(qdata.indexOf('=') + 1);
-                    if (slice == 'getdisdet') {
-                      //that.log('cache : getdisdet');
-                      var result = "{\"pow\":\"" + parseInt(info.valvedisdet) + "\"}";
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else if (slice == 'getstatus') {
-                      //that.log('cache : getdisdet');
-                      var result = "{\"pow\":\"" + parseInt(info.valvestatus) + "\"}";
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: water not supported");
-                    }
-                  } else if (q.pathname == '/addrled') {
-                    //that.log('cache : getting adled');
-                    slice = qdata.slice((slicepos = qdata.indexOf('=') + 1));
-                    if (slice == 'phsb') {
-                      //that.log('cache : phsb');
-                      var result = JSON.stringify(info.addrled);
-                      //that.log("cache %s", result);
-                      serverresponse.end(result);
-                    } else {
-                      that.log("*E: addrled not supported");
-                    }
-                  } else {
-                    that.log("*E :cache request not supported");
-                  }
-                } catch (e) {
-                  this.log('*E: error in parsing response');
-                  serverresponse.end(result);
-                }
-              } else {
-                serverresponse.writeHead(500, {
-                  'Content-Type': 'text/plain'
-                });
-                serverresponse.end();
-                that.log('*E: cache responding with error');
-              }
             }
             return waitforcache;
           }(), this.interval);
-
+        }
         } else {
           cachevalid = 0;
           cacheunderrequest = 0;
@@ -428,19 +274,189 @@ function Http_jphsb(log, config) {
               serverresponse.writeHead(200, {
                 'Content-Type': 'text/plain'
               });
+              that.log('cache passthru');
               serverresponse.end(requestbody);
             } else {
               serverresponse.writeHead(500, {
                 'Content-Type': 'text/plain'
               });
+              that.log('cache passthru fail');
               serverresponse.end();
             }
           }.bind(this));
         }
       });
 
+function sendCacheResponse(serverrequest, serverresponse) {
+  if (!err && resp.statusCode == 200) {
+    //that.log('cache : responding ok ');
+    //that.log("answer %s", serverrequest.url);
+    serverresponse.writeHead(resp.statusCode, {
+      'Content-Type': 'text/plain'
+    });
+    let result = buildResult(serverrequest);
+    serverresponse.write(result);
+  } else {
+    serverresponse.writeHead(500, {
+      'Content-Type': 'text/plain'
+    });
+    that.log('*E: cache responding with error');
+  }
+  serverresponse.end();
 
+};
 
+      function buildResult(serverrequest) {
+        try {
+          var q = url.parse(serverrequest.url.substring(1));
+          var qdata = q.query;
+          var info = JSON.parse(body);
+          var i = 0;
+          var slicepos = 0;
+          var slice;
+          //that.log('cache : parsing %s', q.pathname);
+          if (q.pathname == '/led') {
+            //that.log('cache : getting led');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
+            if (slice == 'phsb') {
+              //that.log('cache : phsb');
+              var maxbrightness = 0;
+              var avghue = 0;
+              var avgsat = 0;
+              while ((slicepos = qdata.indexOf('=', slicepos) + 1) > 0) {
+                endpos = qdata.indexOf('&', slicepos);
+                if (endpos == -1) {
+                  slice = parseInt(qdata.slice(slicepos));
+                } else {
+                  slice = parseInt(qdata.slice(slicepos, endpos));
+                }
+                //that.log('cache : slice %d', slice);
+                maxbrightness = (parseInt(info.led[slice].bri) > maxbrightness ? parseInt(info.led[slice].bri) : maxbrightness);
+                avghue += parseInt(info.led[slice].hue);
+                avgsat += parseInt(info.led[slice].sat);
+                i++;
+              }
+              return "{\"pow\":\"" + maxbrightness + "\", \"bri\":\"" + maxbrightness + "\",\"hue\":\"" + parseInt(avghue / i) + "\",\"sat\":\"" + parseInt(avgsat / i) + "\"}";
+              //that.log("cache : %s", result)
+            } else {
+              that.log("*E: led not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/rctx') {
+            //that.log('cache : getting rctx');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
+            if (slice == 'get') {
+              //that.log('cache : get');
+              slice = parseInt(qdata.slice(qdata.indexOf('=', slicepos) + 1));
+              //that.log('cache : slice %d', slice);
+              return "{\"pow\":\"" + parseInt(info.rctx[slice].pow) + "\"}";
+              //that.log("cache %s", result);
+            } else if (slice == 'pts') {
+              //that.log('cache : pts');
+              slice = qdata.slice(qdata.indexOf('=', slicepos) + 1);
+              //that.log('cache : slice %d', slice);
+              return JSON.stringify(info.rctx[slice]);
+              //that.log("cache %s", result);
+            } else {
+              that.log("*E: tctx not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/spot') {
+            //that.log('cache : getting spot');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
+            if (slice == 'pb') {
+                //that.log('cache : pb');
+              let maxbrightness = 0;
+              while ((slicepos = qdata.indexOf('=', slicepos) + 1) > 0) {
+                endpos = qdata.indexOf('&', slicepos);
+                if (endpos == -1) {
+                  slice = parseInt(qdata.slice(slicepos));
+                } else {
+                  slice = parseInt(qdata.slice(slicepos, endpos));
+                }
+                //that.log('cache : slice %d', slice);
+                maxbrightness = (parseInt(info.spot[slice].bri) > maxbrightness ? parseInt(info.spot[slice].bri) : maxbrightness);
+              }
+              return "{\"pow\":\"" + maxbrightness + "\",\"bri\":\"" + maxbrightness + "\"}";
+              //that.log("cache result : %s", result);
+            } else if (slice == 'getio') {
+              //that.log('cache : getting io15');
+              return "{\"pow\":\"" + parseInt(info.io15) + "\"}";
+              //that.log("cacge :%s", result);
+            } else {
+              that.log("*E: spot not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/runprogram') {
+            //that.log('cache : getting runprogm');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
+            if (slice == 'getstatus') {
+              //that.log('cache : getstatus');
+              slice = qdata.slice(qdata.indexOf('=', slicepos) + 1);
+              //that.log('cache : slice %s', slice);
+              if (parseInt(info.programrun) && (info.programname == slice)) {
+                return "{\"pow\":\"1\"}";
+              } else {
+                return "{\"pow\":\"0\"}";
+              }
+              
+              //that.log("cacge :%s", result);
+            } else {
+              that.log("*E: runprogram not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/heater') {
+            //that.log('cache : getting heater');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1), qdata.indexOf('&', slicepos));
+            if (slice == 'status') {
+              //that.log('cache : status');
+              slice = parseInt(qdata.slice(qdata.indexOf('=', slicepos) + 1));
+              //that.log('cache : slice %d', slice);
+              return JSON.stringify(info.heater[slice]);
+              
+              //that.log("cache %s", result);
+            } else {
+              that.log("*E: heater not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/water') {
+            //that.log('cache : getting water');
+            slice = qdata.slice(qdata.indexOf('=') + 1);
+            if (slice == 'getdisdet') {
+              //that.log('cache : getdisdet');
+              return "{\"pow\":\"" + parseInt(info.valvedisdet) + "\"}";
+              
+              //that.log("cache %s", result);
+            } else if (slice == 'getstatus') {
+              //that.log('cache : getdisdet');
+              return "{\"pow\":\"" + parseInt(info.valvestatus) + "\"}";
+              
+              //that.log("cache %s", result);
+            } else {
+              that.log("*E: water not supported");
+              return '0';
+            }
+          } else if (q.pathname == '/addrled') {
+            //that.log('cache : getting adled');
+            slice = qdata.slice((slicepos = qdata.indexOf('=') + 1));
+            if (slice == 'phsb') {
+              //that.log('cache : phsb');
+              return JSON.stringify(info.addrled);
+              
+              //that.log("cache %s", result);
+            } else {
+              that.log("*E: addrled not supported");
+              return '0';
+            }
+          } else {
+            that.log("*E :cache request not supported");
+            return '0';
+          }
+        } catch (e) {
+          that.log('*E: error in parsing response');
+          return '0';
+        }
+  };
 
       this.cacheserver.listen(this.port, function() {
         that.log("listening on: http://<ipaddress>:%s", that.port);
@@ -522,7 +538,6 @@ Http_jphsb.prototype.getPowerState = function(callback) {
     timeout: this.timeout*/
   }, function(err, response, body) {
     if (!err && response.statusCode == 200) {
-
       try {
         var info = JSON.parse(body);
         this.log('power is currently %s', parseInt(info.pow) ? 'ON' : 'OFF');
@@ -722,8 +737,8 @@ Http_jphsb.prototype.getCurrentPosition = function(callback) {
     timeout: this.timeout*/
   }, function(err, response, body) {
     if (!err && response.statusCode == 200) {
+      try {
       var info = JSON.parse(body);
-
       this.JPService
         .getCharacteristic(Characteristic.PositionState).updateValue(parseInt(info.state));
       this.log('state is currently %d', parseInt(info.state));
@@ -733,7 +748,11 @@ Http_jphsb.prototype.getCurrentPosition = function(callback) {
 
       this.log('position is currently %d', parseInt(info.pow));
       callback(null, parseInt(info.pow)); // success
-    } else {
+    } catch (e) {
+      this.log('error in parsing response');
+      callback(null, 0); // assume power off
+    }
+   } else {
       this.log("Error getting position: %s %s", this.status_url, err);
       callback(err);
     }
